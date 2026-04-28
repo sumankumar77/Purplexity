@@ -1,0 +1,28 @@
+# Phase 1 Frontend UI Tasks
+
+- [x] Inspect existing project files before setup
+- [x] Attempt Vite React TypeScript scaffold command
+- [x] Create Vite project configuration manually after non-interactive scaffold cancellation
+- [x] Add React and TypeScript entry files
+- [x] Add Tailwind CSS configuration
+- [x] Add ESLint configuration
+- [x] Create reusable chat message types
+- [x] Build centered dark chat layout
+- [x] Build reusable message list component
+- [x] Build reusable message bubble component
+- [x] Build bottom chat input component
+- [x] Add fake loading state for UI preview
+- [x] Update UI to match attached Perplexity-style references
+- [x] Add fixed left sidebar with navigation items
+- [x] Add top category navigation
+- [x] Add centered landing title and large prompt composer
+- [x] Add starter prompt panel below the composer
+- [x] Refine suggested follow-up questions panel to match attached UI
+- [x] Refine composer sizing, spacing, and controls to match attached UI
+- [x] Add Vite ambient type declarations for CSS imports
+- [x] Update PostCSS configuration for installed Tailwind version
+- [x] Install frontend dependencies
+- [x] Run production build successfully
+- [x] Run lint check successfully
+- [x] Start local Vite dev server for preview
+- [x] Keep backend, Firebase, Gemini, and Tavily out of Phase 1
