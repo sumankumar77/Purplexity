@@ -6,14 +6,19 @@ type ChatInputProps = {
   onSendMessage: (message: string) => Promise<void>;
 };
 
+const SUBMIT_KEYS = {
+  enter: 'Enter',
+};
+
 export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState('');
+  const canSubmit = message.trim().length > 0 && !isLoading;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmedMessage = message.trim();
-    if (!trimmedMessage || isLoading) {
+    if (!trimmedMessage || !canSubmit) {
       return;
     }
 
@@ -23,21 +28,21 @@ export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
 
   return (
     <form
-      className="rounded-[18px] border border-[#393735] bg-[#1d1c1a] px-[26px] py-[21px] shadow-2xl shadow-black/20"
+      className="h-[148px] rounded-[18px] border border-[#393735] bg-[#1d1c1a] px-[26px] py-[21px] shadow-2xl shadow-black/20"
       onSubmit={handleSubmit}
     >
       <label className="sr-only" htmlFor="message">
         Ask Purplexity
       </label>
       <textarea
-        className="max-h-40 min-h-[46px] w-full resize-none bg-transparent text-[19px] font-semibold leading-7 text-zinc-100 outline-none placeholder:text-[#85837f]"
+        className="max-h-[46px] min-h-[46px] w-full resize-none border-0 bg-transparent p-0 text-[20px] font-semibold leading-7 text-zinc-100 outline-none placeholder:text-[#85837f]"
         id="message"
-        placeholder="Type / for search modes"
+        placeholder="Ask anything..."
         rows={1}
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyDown={(event) => {
-          if (event.key === 'Enter' && !event.shiftKey) {
+          if (event.key === SUBMIT_KEYS.enter && !event.shiftKey) {
             event.preventDefault();
             event.currentTarget.form?.requestSubmit();
           }
@@ -47,7 +52,7 @@ export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
         <div className="flex items-center gap-[17px]">
           <button
             aria-label="Add attachment"
-            className="grid h-8 w-8 place-items-center rounded-md text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100"
+            className="grid h-8 w-8 place-items-center rounded-md border-0 bg-transparent p-0 text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100"
             type="button"
           >
             <Plus size={22} strokeWidth={1.5} aria-hidden="true" />
@@ -64,7 +69,7 @@ export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
 
         <div className="flex items-center gap-[17px]">
           <button
-            className="hidden items-center gap-[6px] text-[16px] font-medium text-[#aaa7a2] transition hover:text-zinc-100 sm:inline-flex"
+            className="hidden items-center gap-[6px] border-0 bg-transparent p-0 text-[16px] font-medium text-[#aaa7a2] transition hover:text-zinc-100 sm:inline-flex"
             type="button"
           >
             Model
@@ -72,22 +77,22 @@ export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
           </button>
           <button
             aria-label="Voice input"
-            className="grid h-8 w-8 place-items-center rounded-md text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100"
+            className="grid h-8 w-8 place-items-center rounded-md border-0 bg-transparent p-0 text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100"
             type="button"
           >
             <Mic size={19} strokeWidth={1.65} aria-hidden="true" />
           </button>
           <button
             aria-label="Search settings"
-            className="hidden h-8 w-8 place-items-center rounded-md text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100 sm:grid"
+            className="hidden h-8 w-8 place-items-center rounded-md border-0 bg-transparent p-0 text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100 sm:grid"
             type="button"
           >
             <SlidersHorizontal size={19} strokeWidth={1.65} aria-hidden="true" />
           </button>
           <button
             aria-label="Send message"
-            className="grid h-[41px] w-[41px] shrink-0 place-items-center rounded-full bg-[#deddda] text-zinc-950 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-[#deddda] disabled:text-zinc-950"
-            disabled={isLoading || message.trim().length === 0}
+            className="grid h-[41px] w-[41px] shrink-0 place-items-center rounded-full border-0 bg-[#deddda] p-0 text-zinc-950 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-[#deddda] disabled:text-zinc-950"
+            disabled={!canSubmit}
             type="submit"
           >
             <ArrowUp size={18} strokeWidth={2.2} aria-hidden="true" />

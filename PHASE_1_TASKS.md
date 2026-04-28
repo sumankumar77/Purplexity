@@ -19,6 +19,13 @@
 - [x] Add starter prompt panel below the composer
 - [x] Refine suggested follow-up questions panel to match attached UI
 - [x] Refine composer sizing, spacing, and controls to match attached UI
+- [x] Fix landing layout so suggested questions are visible without scrolling
+- [x] Match latest Perplexity reference screenshot content and spacing
+- [x] Refactor Phase 1 UI into focused components and constants
+- [x] Extract fake chat state into a preview chat hook
+- [x] Add small class name utility for conditional styles
+- [x] Add right-side page scrollbar
+- [x] Pin sidebar sign-in action to the bottom
 - [x] Add Vite ambient type declarations for CSS imports
 - [x] Update PostCSS configuration for installed Tailwind version
 - [x] Install frontend dependencies
