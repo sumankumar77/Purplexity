@@ -6,10 +6,10 @@ export function TopNavigation() {
       <nav aria-label="Search categories">
         <ul className="flex items-center gap-[24px] text-[16px] font-medium text-[#aaa7a2]">
           {TOP_NAV_ITEMS.map((item) => (
-            <li key={item}>
-              <button className="p-0 transition hover:text-zinc-100" type="button">
-                {item}
-              </button>
+            <li key={item.label}>
+              <a className="p-0 transition hover:text-zinc-100" href={item.path}>
+                {item.label}
+              </a>
             </li>
           ))}
         </ul>

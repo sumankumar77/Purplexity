@@ -1,5 +1,5 @@
-import { FormEvent, useState } from 'react';
-import { ArrowUp, ChevronDown, Mic, Monitor, Plus, SlidersHorizontal } from 'lucide-react';
+import { FormEvent, useRef, useState } from 'react';
+import { ArrowUp, CornerDownLeft, Globe2, Paperclip, Sparkles } from 'lucide-react';
 
 type ChatInputProps = {
   isLoading: boolean;
@@ -12,6 +12,9 @@ const SUBMIT_KEYS = {
 
 export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
   const [message, setMessage] = useState('');
+  const [isWebEnabled, setIsWebEnabled] = useState(true);
+  const [attachmentName, setAttachmentName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const canSubmit = message.trim().length > 0 && !isLoading;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -28,74 +31,87 @@ export function ChatInput({ isLoading, onSendMessage }: ChatInputProps) {
 
   return (
     <form
-      className="h-[148px] rounded-[18px] border border-[#393735] bg-[#1d1c1a] px-[26px] py-[21px] shadow-2xl shadow-black/20"
+      className="min-h-[122px] rounded-[16px] border border-zinc-100 bg-[#101010] px-[20px] py-[20px] shadow-[0_30px_80px_rgba(85,47,145,0.28)]"
       onSubmit={handleSubmit}
     >
+      <input
+        className="sr-only"
+        ref={fileInputRef}
+        type="file"
+        onChange={(event) => {
+          setAttachmentName(event.target.files?.[0]?.name ?? null);
+        }}
+      />
+
       <label className="sr-only" htmlFor="message">
         Ask Purplexity
       </label>
-      <textarea
-        className="max-h-[46px] min-h-[46px] w-full resize-none border-0 bg-transparent p-0 text-[20px] font-semibold leading-7 text-zinc-100 outline-none placeholder:text-[#85837f]"
-        id="message"
-        placeholder="Ask anything..."
-        rows={1}
-        value={message}
-        onChange={(event) => setMessage(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === SUBMIT_KEYS.enter && !event.shiftKey) {
-            event.preventDefault();
-            event.currentTarget.form?.requestSubmit();
-          }
-        }}
-      />
-      <div className="mt-[24px] flex items-center justify-between gap-4">
-        <div className="flex items-center gap-[17px]">
+
+      <div className="flex items-start gap-4">
+        <Sparkles className="mt-1 shrink-0 text-zinc-100" size={18} strokeWidth={1.8} />
+        <textarea
+          className="min-h-[42px] w-full resize-none border-0 bg-transparent p-0 text-[18px] font-semibold leading-7 text-zinc-100 outline-none placeholder:text-[#777]"
+          id="message"
+          placeholder="What do you want to know?"
+          rows={1}
+          value={message}
+          onChange={(event) => setMessage(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === SUBMIT_KEYS.enter && !event.shiftKey) {
+              event.preventDefault();
+              event.currentTarget.form?.requestSubmit();
+            }
+          }}
+        />
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-2">
           <button
-            aria-label="Add attachment"
-            className="grid h-8 w-8 place-items-center rounded-md border-0 bg-transparent p-0 text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100"
+            aria-pressed={isWebEnabled}
+            className={`inline-flex h-[32px] items-center gap-2 rounded-full border border-zinc-100 px-3 text-[13px] font-bold transition ${
+              isWebEnabled
+                ? 'bg-white text-zinc-950'
+                : 'text-zinc-100 hover:bg-white hover:text-zinc-950'
+            }`}
             type="button"
+            onClick={() => setIsWebEnabled((currentValue) => !currentValue)}
           >
-            <Plus size={22} strokeWidth={1.5} aria-hidden="true" />
+            <Globe2 size={15} strokeWidth={1.8} aria-hidden="true" />
+            Web
           </button>
+
           <button
-            className="inline-flex h-[39px] items-center gap-[8px] rounded-full border border-[#2a2927] bg-[#1b1a18] px-[15px] text-[16px] font-semibold text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] transition hover:bg-white/[0.04]"
+            className="inline-flex h-[32px] max-w-[190px] items-center gap-2 rounded-full border border-zinc-100 px-3 text-[13px] font-bold text-zinc-100 transition hover:bg-white hover:text-zinc-950"
             type="button"
+            onClick={() => fileInputRef.current?.click()}
           >
-            <Monitor size={16} strokeWidth={1.7} aria-hidden="true" />
-            Computer
-            <Plus size={15} className="text-[#7d7a75]" strokeWidth={1.7} aria-hidden="true" />
+            <Paperclip size={15} strokeWidth={1.8} aria-hidden="true" />
+            <span className="truncate">{attachmentName ?? 'Attach'}</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-[17px]">
-          <button
-            className="hidden items-center gap-[6px] border-0 bg-transparent p-0 text-[16px] font-medium text-[#aaa7a2] transition hover:text-zinc-100 sm:inline-flex"
-            type="button"
-          >
-            Model
-            <ChevronDown size={15} strokeWidth={1.7} aria-hidden="true" />
-          </button>
-          <button
-            aria-label="Voice input"
-            className="grid h-8 w-8 place-items-center rounded-md border-0 bg-transparent p-0 text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100"
-            type="button"
-          >
-            <Mic size={19} strokeWidth={1.65} aria-hidden="true" />
-          </button>
-          <button
-            aria-label="Search settings"
-            className="hidden h-8 w-8 place-items-center rounded-md border-0 bg-transparent p-0 text-[#8d8a85] transition hover:bg-white/[0.05] hover:text-zinc-100 sm:grid"
-            type="button"
-          >
-            <SlidersHorizontal size={19} strokeWidth={1.65} aria-hidden="true" />
-          </button>
+        <div className="flex items-center gap-3">
+          <span className="hidden items-center gap-2 text-[13px] font-semibold text-zinc-100 md:inline-flex">
+            <kbd className="grid h-6 min-w-6 place-items-center rounded border border-zinc-100 px-1 text-[11px]">
+              <CornerDownLeft size={13} strokeWidth={1.8} aria-hidden="true" />
+            </kbd>
+            to send
+          </span>
+          <span className="hidden text-zinc-500 md:inline">-</span>
+          <span className="hidden items-center gap-2 text-[13px] font-semibold text-zinc-100 md:inline-flex">
+            <kbd className="grid h-6 min-w-[78px] place-items-center rounded border border-zinc-100 px-1 text-[11px]">
+              Shift Enter
+            </kbd>
+            new line
+          </span>
           <button
             aria-label="Send message"
-            className="grid h-[41px] w-[41px] shrink-0 place-items-center rounded-full border-0 bg-[#deddda] p-0 text-zinc-950 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-[#deddda] disabled:text-zinc-950"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-0 bg-transparent p-0 text-zinc-100 transition hover:bg-white hover:text-zinc-950 disabled:cursor-not-allowed disabled:text-zinc-600"
             disabled={!canSubmit}
             type="submit"
           >
-            <ArrowUp size={18} strokeWidth={2.2} aria-hidden="true" />
+            <ArrowUp size={20} strokeWidth={2.2} aria-hidden="true" />
           </button>
         </div>
       </div>
